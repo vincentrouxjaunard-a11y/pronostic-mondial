@@ -3,7 +3,7 @@ import { useState, useEffect, useReducer } from "react";
 // ─── CONSTANTES ───────────────────────────────────────────────────────────────
 
 const STORAGE_KEY = "mondial2026_v1";
-const PLAYERS = ["Vincent", "Samuel", "Thomas"];
+const PLAYERS = ["Vincent", "Samuel", "Thomas", "Denis", "Mika", "Laurent", "Gabin", "Raph", "Olivier S", "Olivier G", "Julien"];
 
 const PLAYED = {
   "A1": { home: 2, away: 0 },

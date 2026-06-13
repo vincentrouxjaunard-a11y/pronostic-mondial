@@ -106,12 +106,12 @@ const GROUPS = [
     {id:"K5",home:"Portugal 🇵🇹",away:"Colombie 🇨🇴",date:"27 juin"},
     {id:"K6",home:"RD Congo 🇨🇩",away:"Ouzbékistan 🇺🇿",date:"27 juin"},
   ]},
-  { id:"L", name:"Groupe L", teams:["Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿","Ghana 🇬🇭","Croatie 🇭🇷","Ouzbékistan 🇺🇿"], matches:[
+  { id:"L", name:"Groupe L", teams:["Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿","Ghana 🇬🇭","Croatie 🇭🇷","Panama 🇵🇦"], matches:[
     {id:"L1",home:"Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿",away:"Ghana 🇬🇭",date:"17 juin"},
-    {id:"L2",home:"Croatie 🇭🇷",away:"Ouzbékistan 🇺🇿",date:"17 juin"},
+    {id:"L2",home:"Croatie 🇭🇷",away:"Panama 🇵🇦",date:"17 juin"},
     {id:"L3",home:"Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿",away:"Croatie 🇭🇷",date:"23 juin"},
-    {id:"L4",home:"Ghana 🇬🇭",away:"Ouzbékistan 🇺🇿",date:"23 juin"},
-    {id:"L5",home:"Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿",away:"Ouzbékistan 🇺🇿",date:"27 juin"},
+    {id:"L4",home:"Ghana 🇬🇭",away:"Panama 🇵🇦",date:"23 juin"},
+    {id:"L5",home:"Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿",away:"Panama 🇵🇦",date:"27 juin"},
     {id:"L6",home:"Ghana 🇬🇭",away:"Croatie 🇭🇷",date:"27 juin"},
   ]},
 ];

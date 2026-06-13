@@ -309,7 +309,7 @@ export default function App() {
           <div style={S.card}>
             <div style={{ fontWeight:700, fontSize:15, marginBottom:14, color:C.accent }}>{curGroup.name}</div>
             {curGroup.matches.map(m => {
-              const isPlayed = !!PLAYED[m.id];
+              const isPlayed = !!PLAYED[m.id]|| (actual[m.id] && actual[m.id].home !== undefined && actual[m.id].away !== undefined && !isNaN(actual[m.id].home) && !isNaN(actual[m.id].away));
               const pred = predictions[activePlayer][m.id]||{};
               const act = actual[m.id];
               const pts = act ? computePoints(pred, act) : null;

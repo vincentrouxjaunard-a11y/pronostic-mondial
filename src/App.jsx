@@ -19,7 +19,7 @@ const db = getDatabase(firebaseApp);
 
 // ─── CONSTANTES ───────────────────────────────────────────────────────────────
 
-const PLAYERS = ["Vincent", "Samuel", "Thomas", "Denis", "Mika", "Laurent", "Gabin", "Raph", "Olivier S", "Olivier G", "Julien"];
+const PLAYERS = ["Vincent", "Samuel", "Thomas", "Denis", "Laurent", "Olivier S", "Julien", "Paco"];
 const PALETTE = ["#22d3ee","#a78bfa","#f472b6","#34d399","#fb923c","#818cf8","#facc15","#f87171","#4ade80","#38bdf8","#c084fc"];
 const getPlayerColor = (p) => PALETTE[PLAYERS.indexOf(p) % PALETTE.length];
 

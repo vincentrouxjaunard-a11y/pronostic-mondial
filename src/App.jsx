@@ -19,7 +19,7 @@ const db = getDatabase(firebaseApp);
 
 // ─── CONSTANTES ───────────────────────────────────────────────────────────────
 
-const PLAYERS = ["Vincent", "Samuel", "Thomas", "Denis", "Laurent", "Olivier S", "Julien", "Paco"];
+const PLAYERS = ["Vincent", "Samuel", "Thomas", "Denis", "Mika", "Laurent", "Gabin", "Raph", "Olivier S", "Olivier G", "Julien"];
 const PALETTE = ["#22d3ee","#a78bfa","#f472b6","#34d399","#fb923c","#818cf8","#facc15","#f87171","#4ade80","#38bdf8","#c084fc"];
 const getPlayerColor = (p) => PALETTE[PLAYERS.indexOf(p) % PALETTE.length];
 
@@ -232,13 +232,37 @@ export default function App(){
       const data=snapshot.val();
       if(data){
         skipNextSave.current=true;
-        // Fusionner avec l'état frais pour éviter les clés manquantes
+
+        // Firebase stocke les tableaux comme objets {0:"Brésil",1:"Maroc"}
+        // Cette fonction reconvertit en vrai tableau ordonné
+        const toArray = (val) => {
+          if (!val) return [];
+          if (Array.isArray(val)) return val.filter(Boolean);
+          // Objet Firebase {0:"X", 1:"Y"} → ["X","Y"]
+          return Object.keys(val).sort((a,b)=>Number(a)-Number(b)).map(k=>val[k]).filter(Boolean);
+        };
+
+        // Reconvertir tous les quals en vrais tableaux
+        const rawQuals = data.quals || {};
+        const fixedQuals = {...fresh.quals};
+        Object.keys(rawQuals).forEach(key => {
+          fixedQuals[key] = toArray(rawQuals[key]);
+        });
+
+        // Reconvertir officialQuals
+        const rawOQ = data.officialQuals || {};
+        const fixedOQ = {};
+        Object.keys(rawOQ).forEach(gId => {
+          fixedOQ[gId] = toArray(rawOQ[gId]);
+        });
+
         const merged={
           predictions:{...fresh.predictions,...(data.predictions||{})},
-          quals:{...fresh.quals,...(data.quals||{})},
+          quals:fixedQuals,
           actual:{...fresh.actual,...(data.actual||{})},
-          officialQuals:data.officialQuals||{},
+          officialQuals:fixedOQ,
         };
+
         // S'assurer que chaque joueur a bien ses clés
         PLAYERS.forEach(p=>{
           if(!merged.predictions[p]) merged.predictions[p]={};

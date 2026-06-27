@@ -172,7 +172,27 @@ function reducer(state,action){
     case "FIREBASE_LOAD": return {...state,...action.data};
     case "SET_PREDICTION":{const{player,matchId,side,value}=action;return{...state,predictions:{...state.predictions,[player]:{...state.predictions[player],[matchId]:{...state.predictions[player][matchId],[side]:value}}}};}
     case "SET_ACTUAL":{const{matchId,side,value}=action;return{...state,actual:{...state.actual,[matchId]:{...state.actual[matchId],[side]:value}}};}
-    case "TOGGLE_QUAL":{const{player,groupId,team}=action;const key=`${player}-${groupId}`;const cur=state.quals[key]||[];const idx=cur.indexOf(team);const next=idx!==-1?cur.filter(t=>t!==team):cur.length<2?[...cur,team]:cur;return{...state,quals:{...state.quals,[key]:next}};}
+    case "TOGGLE_QUAL":{
+      const{player,groupId,team}=action;
+      const key=`${player}-${groupId}`;
+      const raw=state.quals[key]||[];
+      // Nettoyer le tableau (Firebase peut corrompre en objet avec undefined)
+      const cur=(Array.isArray(raw)?raw:Object.values(raw)).filter(t=>t!=null&&t!==undefined&&t!=="");
+      const idx=cur.indexOf(team);
+      let next;
+      if(idx!==-1){
+        // Déjà sélectionné → on le retire
+        next=cur.filter(t=>t!==team);
+      } else if(cur.length===0){
+        next=[team];
+      } else if(cur.length===1){
+        next=[cur[0],team];
+      } else {
+        // 2 déjà sélectionnés → clic sur un 3e remplace le 1er, le 2e reste
+        next=[team,cur[1]];
+      }
+      return{...state,quals:{...state.quals,[key]:next}};
+    }
     case "TOGGLE_OFFICIAL_QUAL":{const{groupId,team}=action;const cur=state.officialQuals[groupId]||[];const idx=cur.indexOf(team);const next=idx!==-1?cur.filter(t=>t!==team):cur.length<2?[...cur,team]:cur;return{...state,officialQuals:{...state.officialQuals,[groupId]:next}};}
     case "SET_TAB":return{...state,tab:action.tab};
     case "SET_PLAYER":return{...state,activePlayer:action.player};

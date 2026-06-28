@@ -1278,6 +1278,176 @@ export default function App(){
     );
   };
 
+
+  // ── BRACKET VIEW ──────────────────────────────────────────────────────────
+  // Affiche le tableau complet de la phase éliminatoire
+  // mode: "prono" (pronostics du joueur actif) ou "admin" (résultats officiels)
+  const BracketView=({mode})=>{
+    const resolveTeam=(label)=>{
+      if(!label||!label.startsWith("Vainqueur")) return label;
+      const refId=label.replace("Vainqueur ","");
+      return elimActual[refId]?.winner||null;
+    };
+
+    const getDisplayName=(label, mode)=>{
+      if(!label) return "?";
+      if(!label.startsWith("Vainqueur")) return shortName(label);
+      if(mode==="admin"){
+        const resolved=resolveTeam(label);
+        return resolved?shortName(resolved):label.replace("Vainqueur ","?");
+      } else {
+        // Mode prono: chercher le pronostic du joueur
+        const refId=label.replace("Vainqueur ","");
+        const pred=elimPredictions[activePlayer]?.[refId]||{};
+        return pred.winner?shortName(pred.winner):(elimActual[refId]?.winner?shortName(elimActual[refId].winner):"?");
+      }
+    };
+
+    const getWinner=(matchId, mode)=>{
+      if(mode==="admin"){
+        return elimActual[matchId]?.winner||null;
+      } else {
+        // Si le résultat officiel est connu, on l'utilise
+        if(elimActual[matchId]?.winner) return elimActual[matchId].winner;
+        // Sinon le pronostic du joueur
+        return elimPredictions[activePlayer]?.[matchId]?.winner||null;
+      }
+    };
+
+    const getWinnerShort=(matchId, mode)=>{
+      const w=getWinner(matchId, mode);
+      return w?shortName(w):null;
+    };
+
+    // Structure du bracket : paires de 16es → 8e → QF → SF → F
+    // Côté gauche: M01-M08 → M17-M20 → M25-M26 → M29 → M31
+    // Côté droit:  M09-M16 → M21-M24 → M27-M28 → M30 → M31
+
+    const matchColor=(matchId)=>{
+      const act=elimActual[matchId]||{};
+      if(!act.winner) return C.border;
+      if(mode==="admin") return C.green;
+      const pred=elimPredictions[activePlayer]?.[matchId]||{};
+      if(!pred.winner) return C.border;
+      return pred.winner===act.winner?C.green:C.red;
+    };
+
+    const MatchBox=({matchId, label, showId=true})=>{
+      const r16=ELIM_ROUNDS[0];
+      const match=ELIM_ROUNDS.flatMap(r=>r.matches).find(m=>m.id===matchId);
+      const phase=ELIM_ROUNDS.find(r=>r.matches.some(m=>m.id===matchId))?.id||"R16";
+      const act=elimActual[matchId]||{};
+      const pred=mode==="prono"?(elimPredictions[activePlayer]?.[matchId]||{}):null;
+      const winner=getWinner(matchId, mode);
+      const isKnown=!!act.winner;
+
+      // Équipes à afficher
+      let team1, team2;
+      if(match){
+        team1=getDisplayName(match.home, mode);
+        team2=getDisplayName(match.away, mode);
+      } else {
+        team1="?"; team2="?";
+      }
+
+      const isWinner1=winner&&match&&(winner===(resolveTeam(match.home)||match.home));
+      const isWinner2=winner&&match&&(winner===(resolveTeam(match.away)||match.away));
+      const predWinner=pred?.winner;
+      const isPred1=predWinner&&match&&predWinner.includes(team1.replace("?","").trim())&&team1!=="?";
+      const isPred2=predWinner&&match&&predWinner.includes(team2.replace("?","").trim())&&team2!=="?";
+
+      const bc=matchColor(matchId);
+
+      return(
+        <div style={{border:`1px solid ${bc}`,borderRadius:8,overflow:"hidden",minWidth:110,maxWidth:130,background:"#0a1628"}}>
+          {showId&&<div style={{fontSize:9,color:C.muted,fontWeight:700,textAlign:"center",padding:"2px 4px",borderBottom:`1px solid ${C.border}`,background:"#0f172a"}}>{matchId} · {match?.date||""}</div>}
+          {[{team:team1,isW:isWinner1,isPred:isPred1},{team:team2,isW:isWinner2,isPred:isPred2}].map(({team,isW,isPred},i)=>(
+            <div key={i} style={{
+              padding:"4px 8px",fontSize:11,fontWeight:isW?700:500,
+              background:isW?(mode==="admin"?C.green+"22":isKnown&&isPred?C.green+"22":isKnown?C.red+"11":C.accent+"11"):"transparent",
+              color:isW?(mode==="admin"?C.green:isKnown&&isPred?C.green:isKnown?C.red:pc):team==="?"?C.muted:C.text,
+              borderBottom:i===0?`1px solid ${C.border}`:"none",
+              whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis",
+            }}>
+              {mode==="prono"&&isPred&&!isKnown&&<span style={{color:pc,marginRight:3}}>▶</span>}
+              {team}
+            </div>
+          ))}
+        </div>
+      );
+    };
+
+    // Layout du bracket : 2 colonnes (gauche + droite) avec phases
+    const leftR16=["M01","M02","M03","M04","M05","M06","M07","M08"];
+    const rightR16=["M09","M10","M11","M12","M13","M14","M15","M16"];
+    const leftR8=["M17","M18","M19","M20"];
+    const rightR8=["M21","M22","M23","M24"];
+    const leftQF=["M25","M26"];
+    const rightQF=["M27","M28"];
+    const leftSF=["M29"];
+    const rightSF=["M30"];
+    const finale=["M31"];
+
+    const ColHeader=({label,pts})=>(
+      <div style={{fontSize:10,fontWeight:700,color:C.accent,textAlign:"center",marginBottom:6,padding:"3px 6px",background:C.accent+"11",borderRadius:6,whiteSpace:"nowrap"}}>
+        {label}<br/><span style={{color:C.gold,fontSize:9}}>{pts}</span>
+      </div>
+    );
+
+    const MatchCol=({ids,showId=true})=>(
+      <div style={{display:"flex",flexDirection:"column",gap:8,alignItems:"center"}}>
+        {ids.map(id=><MatchBox key={id} matchId={id} showId={showId}/>)}
+      </div>
+    );
+
+    return(
+      <div style={{...S.card,padding:10,overflowX:"auto"}}>
+        <div style={{fontSize:12,fontWeight:700,color:mode==="prono"?pc:C.purple,marginBottom:10}}>
+          {mode==="prono"?`🏆 Tableau de ${activePlayer}`:"🏆 Tableau officiel"}
+        </div>
+        <div style={{display:"flex",gap:6,minWidth:700}}>
+          {/* Côté gauche */}
+          <div style={{display:"flex",gap:6,alignItems:"flex-start"}}>
+            <div><ColHeader label="16es" pts="+2pts"/><MatchCol ids={leftR16}/></div>
+            <div style={{display:"flex",flexDirection:"column",justifyContent:"space-around",height:"100%",gap:8,paddingTop:22}}>
+              {leftR8.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
+            </div>
+            <div style={{display:"flex",flexDirection:"column",justifyContent:"space-around",gap:8,paddingTop:22}}>
+              {leftQF.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
+            </div>
+            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",gap:8,paddingTop:22}}>
+              {leftSF.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
+            </div>
+          </div>
+
+          {/* Finale centrale */}
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:4,padding:"0 4px"}}>
+            <ColHeader label="Finale" pts="+6pts"/>
+            {finale.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
+            <div style={{fontSize:16,marginTop:4}}>🏆</div>
+          </div>
+
+          {/* Côté droit */}
+          <div style={{display:"flex",gap:6,alignItems:"flex-start"}}>
+            <div style={{display:"flex",flexDirection:"column",justifyContent:"center",gap:8,paddingTop:22}}>
+              {rightSF.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
+            </div>
+            <div style={{display:"flex",flexDirection:"column",justifyContent:"space-around",gap:8,paddingTop:22}}>
+              {rightQF.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
+            </div>
+            <div style={{display:"flex",flexDirection:"column",justifyContent:"space-around",gap:8,paddingTop:22}}>
+              {rightR8.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
+            </div>
+            <div><ColHeader label="16es" pts="+2pts"/><MatchCol ids={rightR16}/></div>
+          </div>
+        </div>
+        <div style={{marginTop:8,fontSize:10,color:C.muted}}>
+          {mode==="prono"?"▶ = votre pronostic · 🟢 = correct · 🔴 = incorrect":"🟢 = vainqueur officiel"}
+        </div>
+      </div>
+    );
+  };
+
   // ── PRONOSTICS ÉLIM ───────────────────────────────────────────────────────
   const PronosElim=()=>{
     return(
@@ -1288,6 +1458,9 @@ export default function App(){
             <button key={r.id} style={S.roundBtn(activeRound===r.id)} onClick={()=>dispatch({type:"SET_ROUND",round:r.id})}>{r.name}</button>
           ))}
         </div>
+
+        {/* Bracket */}
+        <BracketView mode="prono"/>
 
         {/* Meilleur buteur */}
         <div style={{...S.card,borderColor:locked?C.border:C.gold}}>
@@ -1397,6 +1570,9 @@ export default function App(){
             <button key={r.id} style={S.roundBtn(activeRound===r.id&&["R16","R8","QF","SF","F"].includes(activeRound))} onClick={()=>dispatch({type:"SET_ROUND",round:r.id})}>{r.name.replace(" de finale","")}</button>
           ))}
         </div>
+
+        {/* Bracket officiel */}
+        <BracketView mode="admin"/>
 
         {/* Admin meilleur buteur */}
         <div style={{...S.card,borderColor:C.gold}}>

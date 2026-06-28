@@ -764,7 +764,7 @@ const TOP_SCORER_PLAYERS = [
 
 // Points par phase éliminatoire
 const ELIM_POINTS = {
-  "R16": 2, "R8": 3, "QF": 4, "SF": 5, "F": 6
+  "R16": 2, "R8": 3, "QF": 4, "SF": 5, "P3": 4, "F": 6
 };
 
 const PLAYED = {
@@ -880,57 +880,69 @@ const ELIM_ROUNDS = [
   {
     id:"R16", name:"16es de finale",
     matches:[
-      {id:"M01",home:"Afrique du Sud 🇿🇦",away:"Canada 🇨🇦",date:"28 juin"},
-      {id:"M02",home:"Brésil 🇧🇷",away:"Japon 🇯🇵",date:"29 juin"},
-      {id:"M03",home:"Allemagne 🇩🇪",away:"Paraguay 🇵🇾",date:"29 juin"},
-      {id:"M04",home:"Pays-Bas 🇳🇱",away:"Maroc 🇲🇦",date:"30 juin"},
-      {id:"M05",home:"Côte d\'Ivoire 🇨🇮",away:"Norvège 🇳🇴",date:"30 juin"},
-      {id:"M06",home:"France 🇫🇷",away:"Suède 🇸🇪",date:"30 juin"},
-      {id:"M07",home:"Mexique 🇲🇽",away:"Équateur 🇪🇨",date:"1 juil."},
-      {id:"M08",home:"Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿",away:"RD Congo 🇨🇩",date:"1 juil."},
-      {id:"M09",home:"Belgique 🇧🇪",away:"Sénégal 🇸🇳",date:"1 juil."},
-      {id:"M10",home:"États-Unis 🇺🇸",away:"Bosnie-Herzégovine 🇧🇦",date:"2 juil."},
-      {id:"M11",home:"Espagne 🇪🇸",away:"Autriche 🇦🇹",date:"2 juil."},
-      {id:"M12",home:"Portugal 🇵🇹",away:"Croatie 🇭🇷",date:"3 juil."},
-      {id:"M13",home:"Suisse 🇨🇭",away:"Algérie 🇩🇿",date:"3 juil."},
-      {id:"M14",home:"Australie 🇦🇺",away:"Égypte 🇪🇬",date:"3 juil."},
-      {id:"M15",home:"Argentine 🇦🇷",away:"Cap-Vert 🇨🇻",date:"4 juil."},
-      {id:"M16",home:"Colombie 🇨🇴",away:"Ghana 🇬🇭",date:"4 juil."},
+      // Côté gauche
+      {id:"M03",home:"Allemagne 🇩🇪",away:"Paraguay 🇵🇾",date:"29 juin 22h30"},
+      {id:"M06",home:"France 🇫🇷",away:"Suède 🇸🇪",date:"30 juin 23h"},
+      {id:"M01",home:"Afrique du Sud 🇿🇦",away:"Canada 🇨🇦",date:"28 juin 21h"},
+      {id:"M04",home:"Pays-Bas 🇳🇱",away:"Maroc 🇲🇦",date:"30 juin 3h"},
+      {id:"M12",home:"Portugal 🇵🇹",away:"Croatie 🇭🇷",date:"3 juil. 1h"},
+      {id:"M11",home:"Espagne 🇪🇸",away:"Autriche 🇦🇹",date:"2 juil. 21h"},
+      {id:"M10",home:"États-Unis 🇺🇸",away:"Bosnie-Herzégovine 🇧🇦",date:"2 juil. 2h"},
+      {id:"M09",home:"Belgique 🇧🇪",away:"Sénégal 🇸🇳",date:"1 juil. 22h"},
+      // Côté droit
+      {id:"M02",home:"Brésil 🇧🇷",away:"Japon 🇯🇵",date:"29 juin 19h"},
+      {id:"M05",home:"Côte d\'Ivoire 🇨🇮",away:"Norvège 🇳🇴",date:"30 juin 19h"},
+      {id:"M07",home:"Mexique 🇲🇽",away:"Équateur 🇪🇨",date:"1 juil. 3h"},
+      {id:"M08",home:"Angleterre 🏴󠁧󠁢󠁥󠁮󠁧󠁿",away:"RD Congo 🇨🇩",date:"1 juil. 18h"},
+      {id:"M15",home:"Argentine 🇦🇷",away:"Cap-Vert 🇨🇻",date:"4 juil. 0h"},
+      {id:"M14",home:"Australie 🇦🇺",away:"Égypte 🇪🇬",date:"3 juil. 20h"},
+      {id:"M13",home:"Suisse 🇨🇭",away:"Algérie 🇩🇿",date:"3 juil. 5h"},
+      {id:"M16",home:"Colombie 🇨🇴",away:"Ghana 🇬🇭",date:"4 juil. 3h30"},
     ]
   },
   {
     id:"R8", name:"8es de finale",
     matches:[
-      {id:"M17",home:"Vainqueur M01",away:"Vainqueur M02",date:"à venir"},
-      {id:"M18",home:"Vainqueur M03",away:"Vainqueur M04",date:"à venir"},
-      {id:"M19",home:"Vainqueur M05",away:"Vainqueur M06",date:"à venir"},
-      {id:"M20",home:"Vainqueur M07",away:"Vainqueur M08",date:"à venir"},
-      {id:"M21",home:"Vainqueur M09",away:"Vainqueur M10",date:"à venir"},
-      {id:"M22",home:"Vainqueur M11",away:"Vainqueur M12",date:"à venir"},
-      {id:"M23",home:"Vainqueur M13",away:"Vainqueur M14",date:"à venir"},
-      {id:"M24",home:"Vainqueur M15",away:"Vainqueur M16",date:"à venir"},
+      // Côté gauche
+      {id:"M74",home:"Vainqueur M03",away:"Vainqueur M06",date:"4 juil. 23h"},
+      {id:"M73",home:"Vainqueur M01",away:"Vainqueur M04",date:"4 juil. 19h"},
+      {id:"M83",home:"Vainqueur M12",away:"Vainqueur M11",date:"6 juil. 21h"},
+      {id:"M81",home:"Vainqueur M10",away:"Vainqueur M09",date:"7 juil. 2h"},
+      // Côté droit
+      {id:"M76",home:"Vainqueur M02",away:"Vainqueur M05",date:"5 juil. 22h"},
+      {id:"M79",home:"Vainqueur M07",away:"Vainqueur M08",date:"6 juil. 2h"},
+      {id:"M86",home:"Vainqueur M15",away:"Vainqueur M14",date:"7 juil. 18h"},
+      {id:"M85",home:"Vainqueur M13",away:"Vainqueur M16",date:"7 juil. 22h"},
     ]
   },
   {
     id:"QF", name:"Quarts de finale",
     matches:[
-      {id:"M25",home:"Vainqueur M17",away:"Vainqueur M18",date:"à venir"},
-      {id:"M26",home:"Vainqueur M19",away:"Vainqueur M20",date:"à venir"},
-      {id:"M27",home:"Vainqueur M21",away:"Vainqueur M22",date:"à venir"},
-      {id:"M28",home:"Vainqueur M23",away:"Vainqueur M24",date:"à venir"},
+      // Côté gauche
+      {id:"M89",home:"Vainqueur M74",away:"Vainqueur M73",date:"9 juil. 22h"},
+      {id:"M93",home:"Vainqueur M83",away:"Vainqueur M81",date:"10 juil. 21h"},
+      // Côté droit
+      {id:"M91",home:"Vainqueur M76",away:"Vainqueur M79",date:"11 juil. 23h"},
+      {id:"M95",home:"Vainqueur M86",away:"Vainqueur M85",date:"12 juil. 3h"},
     ]
   },
   {
     id:"SF", name:"Demi-finales",
     matches:[
-      {id:"M29",home:"Vainqueur M25",away:"Vainqueur M26",date:"à venir"},
-      {id:"M30",home:"Vainqueur M27",away:"Vainqueur M28",date:"à venir"},
+      {id:"M97",home:"Vainqueur M89",away:"Vainqueur M93",date:"14 juil. 21h"},
+      {id:"M99",home:"Vainqueur M91",away:"Vainqueur M95",date:"15 juil. 21h"},
+    ]
+  },
+  {
+    id:"P3", name:"3e place",
+    matches:[
+      {id:"M102",home:"Perdant M97",away:"Perdant M99",date:"18 juil. 23h"},
     ]
   },
   {
     id:"F", name:"Finale",
     matches:[
-      {id:"M31",home:"Vainqueur M29",away:"Vainqueur M30",date:"19 juil."},
+      {id:"M101",home:"Vainqueur M97",away:"Vainqueur M99",date:"19 juil. 21h"},
     ]
   },
 ];
@@ -1284,13 +1296,44 @@ export default function App(){
   // mode: "prono" (pronostics du joueur actif) ou "admin" (résultats officiels)
   const BracketView=({mode})=>{
     const resolveTeam=(label)=>{
-      if(!label||!label.startsWith("Vainqueur")) return label;
+      if(!label) return label;
+      if(label.startsWith("Perdant")){
+        const refId=label.replace("Perdant ","");
+        const act=elimActual[refId]||{};
+        if(!act.winner) return null;
+        const match=ELIM_ROUNDS.flatMap(r=>r.matches).find(m=>m.id===refId);
+        if(!match) return null;
+        const rH=resolveTeamSimple(match.home);
+        const rA=resolveTeamSimple(match.away);
+        return act.winner===rH?rA:rH;
+      }
+      if(!label.startsWith("Vainqueur")) return label;
       const refId=label.replace("Vainqueur ","");
       return elimActual[refId]?.winner||null;
+    };
+    const resolveTeamSimple=(label)=>{
+      if(!label||!label.startsWith("Vainqueur")) return label;
+      const refId=label.replace("Vainqueur ","");
+      return elimActual[refId]?.winner||label;
+    };
+
+    const getLoser=(matchId)=>{
+      const act=elimActual[matchId]||{};
+      if(!act.winner) return null;
+      const match=ELIM_ROUNDS.flatMap(r=>r.matches).find(m=>m.id===matchId);
+      if(!match) return null;
+      const resolvedHome=resolveTeam(match.home)||match.home;
+      const resolvedAway=resolveTeam(match.away)||match.away;
+      return act.winner===resolvedHome?resolvedAway:resolvedHome;
     };
 
     const getDisplayName=(label, mode)=>{
       if(!label) return "?";
+      if(label.startsWith("Perdant")){
+        const refId=label.replace("Perdant ","");
+        const loser=getLoser(refId);
+        return loser?shortName(loser):"?";
+      }
       if(!label.startsWith("Vainqueur")) return shortName(label);
       if(mode==="admin"){
         const resolved=resolveTeam(label);
@@ -1378,15 +1421,16 @@ export default function App(){
     };
 
     // Layout du bracket : 2 colonnes (gauche + droite) avec phases
-    const leftR16=["M01","M02","M03","M04","M05","M06","M07","M08"];
-    const rightR16=["M09","M10","M11","M12","M13","M14","M15","M16"];
-    const leftR8=["M17","M18","M19","M20"];
-    const rightR8=["M21","M22","M23","M24"];
-    const leftQF=["M25","M26"];
-    const rightQF=["M27","M28"];
-    const leftSF=["M29"];
-    const rightSF=["M30"];
-    const finale=["M31"];
+    const leftR16=["M03","M06","M01","M04","M12","M11","M10","M09"];
+    const rightR16=["M02","M05","M07","M08","M15","M14","M13","M16"];
+    const leftR8=["M74","M73","M83","M81"];
+    const rightR8=["M76","M79","M86","M85"];
+    const leftQF=["M89","M93"];
+    const rightQF=["M91","M95"];
+    const leftSF=["M97"];
+    const rightSF=["M99"];
+    const p3=["M102"];
+    const finale=["M101"];
 
     const ColHeader=({label,pts})=>(
       <div style={{fontSize:10,fontWeight:700,color:C.accent,textAlign:"center",marginBottom:6,padding:"3px 6px",background:C.accent+"11",borderRadius:6,whiteSpace:"nowrap"}}>
@@ -1420,11 +1464,18 @@ export default function App(){
             </div>
           </div>
 
-          {/* Finale centrale */}
-          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:4,padding:"0 4px"}}>
-            <ColHeader label="Finale" pts="+6pts"/>
-            {finale.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
-            <div style={{fontSize:16,marginTop:4}}>🏆</div>
+          {/* Centre : 3e place + Finale */}
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"space-around",gap:8,padding:"0 4px"}}>
+            <div>
+              <ColHeader label="Finale" pts="+6pts"/>
+              {finale.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
+              <div style={{fontSize:16,marginTop:4,textAlign:"center"}}>🏆</div>
+            </div>
+            <div>
+              <ColHeader label="3e place" pts="+4pts"/>
+              {p3.map(id=><MatchBox key={id} matchId={id} showId={true}/>)}
+              <div style={{fontSize:14,marginTop:4,textAlign:"center"}}>🥉</div>
+            </div>
           </div>
 
           {/* Côté droit */}
@@ -1495,6 +1546,7 @@ export default function App(){
                curRound.id==="R8"?"Vainqueur = +3 pts · Score exact TR = +1 bonus":
                curRound.id==="QF"?"Vainqueur = +4 pts · Score exact TR = +1 bonus":
                curRound.id==="SF"?"Vainqueur = +5 pts · Score exact TR = +1 bonus":
+               curRound.id==="P3"?"Vainqueur 3e place = +4 pts · Score exact TR = +1 bonus":
                "Vainqueur = +6 pts · Score exact TR = +1 bonus"}
             </div>
             {curRound.matches.map(m=>{
@@ -1762,6 +1814,7 @@ export default function App(){
           ["🏆",C.accent,"Vainqueur QF","+ 4 pts"],
           ["🏆",C.accent,"Vainqueur 1/2","+ 5 pts"],
           ["🏆",C.gold,"Vainqueur Finale","+ 6 pts"],
+          ["🥉",C.accent,"Vainqueur 3e place","+ 4 pts"],
           ["🎯",C.purple,"Score exact TR (élim)","+1 bonus"],
           ["⚽",C.gold,"Meilleur buteur","+ 10 pts"],
         ].map(([ic,col,lb,pt])=>(

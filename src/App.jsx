@@ -1554,36 +1554,56 @@ export default function App(){
               const act=elimActual[m.id]||{};
               const isLocked=act.winner!==undefined&&act.winner!=="";
               const pts=isLocked?computeElimPoints(pred,act,curRound.id):null;
-              // Résoudre les noms réels via elimActual
-              const resolveTeam=(label)=>{
+
+              // Résolution depuis les pronostics du joueur (chaîne récursive)
+              const resolvePred=(label)=>{
+                if(!label) return label;
+                if(label.startsWith("Perdant")){
+                  const refId=label.replace("Perdant ","");
+                  if(elimActual[refId]?.winner){
+                    const refMatch=ELIM_ROUNDS.flatMap(r=>r.matches).find(mm=>mm.id===refId);
+                    if(refMatch){const rH=resolvePred(refMatch.home);const rA=resolvePred(refMatch.away);return elimActual[refId].winner===rH?rA:rH;}
+                  }
+                  const refPred=elimPredictions[activePlayer]?.[refId]?.winner;
+                  if(refPred){
+                    const refMatch=ELIM_ROUNDS.flatMap(r=>r.matches).find(mm=>mm.id===refId);
+                    if(refMatch){const rH=resolvePred(refMatch.home);const rA=resolvePred(refMatch.away);return refPred===rH?rA:rH;}
+                  }
+                  return label;
+                }
                 if(!label.startsWith("Vainqueur")) return label;
                 const refId=label.replace("Vainqueur ","");
-                return elimActual[refId]?.winner||label;
+                // Priorité 1 : résultat officiel connu
+                if(elimActual[refId]?.winner) return elimActual[refId].winner;
+                // Priorité 2 : pronostic du joueur pour ce match précédent
+                const refPred=elimPredictions[activePlayer]?.[refId]?.winner;
+                if(refPred) return refPred;
+                return label; // pas encore pronostiqué → "Vainqueur MXX"
               };
-              const homeLabel=resolveTeam(m.home);
-              const awayLabel=resolveTeam(m.away);
+
+              const homeLabel=resolvePred(m.home);
+              const awayLabel=resolvePred(m.away);
               const homeShort=shortName(homeLabel);
               const awayShort=shortName(awayLabel);
-              const isPending=homeLabel.startsWith("Vainqueur")||awayLabel.startsWith("Vainqueur");
+              const isPending=homeLabel.startsWith("Vainqueur")||awayLabel.startsWith("Vainqueur")||homeLabel.startsWith("Perdant")||awayLabel.startsWith("Perdant");
+
               return(
-                <div key={m.id} style={{...S.matchRow,opacity:isPending?0.5:1}}>
+                <div key={m.id} style={{...S.matchRow,opacity:isPending?0.4:1}}>
                   <div style={{fontSize:10,color:C.muted,width:42,textAlign:"center",flexShrink:0}}>{m.date}</div>
                   <div style={{flex:1,fontSize:12,fontWeight:600,textAlign:"right",lineHeight:1.3,color:pred.winner===homeLabel&&!isPending?pc:C.text}}>{homeShort}</div>
                   <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,flexShrink:0}}>
-                    {/* Sélection vainqueur */}
                     {!isPending&&!isLocked&&(
                       <div style={{display:"flex",gap:4}}>
                         <button onClick={()=>dispatch({type:"SET_ELIM_PRED",player:activePlayer,matchId:m.id,field:"winner",value:homeLabel})}
-                          style={{padding:"4px 8px",borderRadius:6,border:`2px solid ${pred.winner===homeLabel?pc:C.border}`,background:pred.winner===homeLabel?pc+"33":"transparent",color:pred.winner===homeLabel?pc:C.muted,fontSize:11,fontWeight:700,cursor:"pointer"}}>
-                          Ici
+                          style={{padding:"4px 10px",borderRadius:6,border:`2px solid ${pred.winner===homeLabel?pc:C.border}`,background:pred.winner===homeLabel?pc+"33":"transparent",color:pred.winner===homeLabel?pc:C.muted,fontSize:13,fontWeight:700,cursor:"pointer"}}>
+                          ◀
                         </button>
                         <button onClick={()=>dispatch({type:"SET_ELIM_PRED",player:activePlayer,matchId:m.id,field:"winner",value:awayLabel})}
-                          style={{padding:"4px 8px",borderRadius:6,border:`2px solid ${pred.winner===awayLabel?pc:C.border}`,background:pred.winner===awayLabel?pc+"33":"transparent",color:pred.winner===awayLabel?pc:C.muted,fontSize:11,fontWeight:700,cursor:"pointer"}}>
-                          Ici
+                          style={{padding:"4px 10px",borderRadius:6,border:`2px solid ${pred.winner===awayLabel?pc:C.border}`,background:pred.winner===awayLabel?pc+"33":"transparent",color:pred.winner===awayLabel?pc:C.muted,fontSize:13,fontWeight:700,cursor:"pointer"}}>
+                          ▶
                         </button>
                       </div>
                     )}
-                    {/* Score exact bonus */}
                     {!isPending&&pred.winner&&!isLocked&&(
                       <div style={{display:"flex",alignItems:"center",gap:3}}>
                         <ScoreInput small value={pred.homeScore} disabled={false} onChange={v=>dispatch({type:"SET_ELIM_PRED",player:activePlayer,matchId:m.id,field:"homeScore",value:v})}/>
@@ -1591,8 +1611,8 @@ export default function App(){
                         <ScoreInput small value={pred.awayScore} disabled={false} onChange={v=>dispatch({type:"SET_ELIM_PRED",player:activePlayer,matchId:m.id,field:"awayScore",value:v})}/>
                       </div>
                     )}
-                    {isLocked&&<div style={{fontSize:11,color:C.muted}}>Joué</div>}
-                    {isPending&&<div style={{fontSize:10,color:C.muted,textAlign:"center"}}>En attente</div>}
+                    {isLocked&&<span style={{fontSize:10,color:C.muted}}>Joué</span>}
+                    {isPending&&<span style={{fontSize:10,color:C.muted,textAlign:"center"}}>Pronostiquez d'abord les matchs précédents</span>}
                   </div>
                   <div style={{flex:1,fontSize:12,fontWeight:600,textAlign:"left",lineHeight:1.3,color:pred.winner===awayLabel&&!isPending?pc:C.text}}>{awayShort}</div>
                   <div style={{width:52,textAlign:"center",flexShrink:0}}><Badge pts={pts}/></div>
